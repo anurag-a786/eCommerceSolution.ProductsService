@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BusinessLogicLayer.Mappers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace eCommerce.ProductsService.BusinessLogicLayer
 {
@@ -7,6 +8,7 @@ namespace eCommerce.ProductsService.BusinessLogicLayer
         public static IServiceCollection AddBusinessLogicLayer(this IServiceCollection services)
         {
             //TO DO: Add Business Logic Layer services into the IoC container
+            services.AddAutoMapper(typeof(ProductAddRequestToProductMappingProfile).Assembly);
 
             return services;
         }
