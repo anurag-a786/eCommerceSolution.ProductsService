@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BusinessLogicLayer.ServiceContracts;
+using eCommerce.BusinessLogicLayer.ServiceContracts;
 using eCommerce.BusinessLogicLayer.DTO;
 using eCommerce.DataAccessLayer.Entities;
 using eCommerce.DataAccessLayer.RepositoryContracts;

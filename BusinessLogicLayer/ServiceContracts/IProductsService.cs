@@ -2,7 +2,7 @@
 using eCommerce.BusinessLogicLayer.DTO;
 using System.Linq.Expressions;
 
-namespace BusinessLogicLayer.ServiceContracts
+namespace eCommerce.BusinessLogicLayer.ServiceContracts
 {
     public interface IProductsService
     {
