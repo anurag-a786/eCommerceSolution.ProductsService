@@ -3,6 +3,7 @@ using eCommerce.ProductsService.DataAccessLayer;
 using eCommerce.ProductsService.BusinessLogicLayer;
 using eCommerce.ProductsMicroservice.API.Middleware;
 using eCommerce.ProductsMicroservice.API.APIEndpoints;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,11 @@ builder.Services.AddControllers();
 
 //FluentValidations
 builder.Services.AddFluentValidationAutoValidation();
+
+//Add model binder to read values from JSON to enum
+builder.Services.ConfigureHttpJsonOptions(options => {
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 var app = builder.Build();
 
