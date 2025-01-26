@@ -12,9 +12,14 @@ namespace eCommerce.ProductsService.DataAccessLayer
         public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
             //TO DO: Add Business Logic Layer services into the IoC container
+            string connectionStringTemplate = configuration.GetConnectionString("MySQLConnection")!;
+            string connectionString = connectionStringTemplate
+              .Replace("$MYSQL_HOST", Environment.GetEnvironmentVariable("MYSQL_HOST"))
+              .Replace("$MYSQL_PASSWORD", Environment.GetEnvironmentVariable("MYSQL_PASSWORD"));
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseMySQL(configuration.GetConnectionString("MySQLConnection")!);
+                options.UseMySQL(connectionString);
             });
 
             services.AddScoped<IProductsRepository, ProductsRepository>();
