@@ -40,7 +40,7 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
             byte[] messageBodyInBytes = Encoding.UTF8.GetBytes(messageJson);
 
             //Create exchange
-            string exchangeName = "products.exchange";
+            string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
             _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct, durable: true);
 
             //Publish message
