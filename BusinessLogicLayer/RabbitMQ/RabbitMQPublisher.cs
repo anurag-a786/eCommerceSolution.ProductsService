@@ -34,17 +34,22 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
             _connection.Dispose();
         }
 
-        public void Publish<T>(string routingKey, T message)
+        public void Publish<T>(Dictionary<string, object> headers, T message)
         {
             string messageJson = JsonSerializer.Serialize(message);
             byte[] messageBodyInBytes = Encoding.UTF8.GetBytes(messageJson);
 
             //Create exchange
             string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
-            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic, durable: true);
+            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Headers, durable: true);
 
             //Publish message
-            _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: messageBodyInBytes);
+            var basicProperties = _channel.CreateBasicProperties();
+            basicProperties.Headers = headers;
+
+            //Publish message
+            _channel.BasicPublish(exchange: exchangeName, routingKey: string.Empty, 
+                basicProperties: basicProperties, body: messageBodyInBytes);
         }
     }
 }

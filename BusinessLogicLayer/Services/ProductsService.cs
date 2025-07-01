@@ -19,7 +19,7 @@ namespace eCommerce.BusinessLogicLayer.Services
         private readonly IRabbitMQPublisher _rabbitMQPublisher;
 
 
-        public ProductsService(IValidator<ProductAddRequest> productAddRequestValidator, 
+        public ProductsService(IValidator<ProductAddRequest> productAddRequestValidator,
             IValidator<ProductUpdateRequest> productUpdateRequestValidator, IMapper mapper, IProductsRepository productsRepository
             , IRabbitMQPublisher rabbitMQPublisher)
         {
@@ -79,9 +79,15 @@ namespace eCommerce.BusinessLogicLayer.Services
             if (isDeleted)
             {
                 ProductDeletionMessage message = new ProductDeletionMessage(existingProduct.ProductID, existingProduct.ProductName);
-                string routingKey = "product.delete";
+                // string routingKey = "product.delete";
 
-                _rabbitMQPublisher.Publish(routingKey, message);
+                var headers = new Dictionary<string, object>()
+                {
+                    { "event", "product.delete" },
+                    { "RowCount", 1 }
+                };
+
+                _rabbitMQPublisher.Publish(headers, message);
             }
 
             return isDeleted;
@@ -149,10 +155,18 @@ namespace eCommerce.BusinessLogicLayer.Services
             //Publish product.update.name message to the exchange
             if (isProductNameChanged)
             {
-                string routingKey = "product.update.name";
+                // string routingKey = "product.update.name";
+
                 var message = new ProductNameUpdateMessage(product.ProductID, product.ProductName);
 
-                _rabbitMQPublisher.Publish<ProductNameUpdateMessage>(routingKey, message);
+                var headers = new Dictionary<string, object>()
+                {
+                    { "event", "product.update" },
+                    { "field", "name"},
+                    { "RowCount",  1 }
+                };
+
+                _rabbitMQPublisher.Publish<ProductNameUpdateMessage>(headers, message);
             }
 
             ProductResponse? updatedProductResponse = _mapper.Map<ProductResponse>(updatedProduct);
