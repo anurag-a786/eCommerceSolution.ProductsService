@@ -74,6 +74,16 @@ namespace eCommerce.BusinessLogicLayer.Services
 
             //Attempt to delete product
             bool isDeleted = await _productsRepository.DeleteProduct(productID);
+
+            //Publish message of product.delete
+            if (isDeleted)
+            {
+                ProductDeletionMessage message = new ProductDeletionMessage(existingProduct.ProductID, existingProduct.ProductName);
+                string routingKey = "product.delete";
+
+                _rabbitMQPublisher.Publish(routingKey, message);
+            }
+
             return isDeleted;
         }
 
