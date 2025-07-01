@@ -41,10 +41,10 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
 
             //Create exchange
             string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
-            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Fanout, durable: true);
+            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic, durable: true);
 
             //Publish message
-            _channel.BasicPublish(exchange: exchangeName, routingKey: string.Empty, basicProperties: null, body: messageBodyInBytes);
+            _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: messageBodyInBytes);
         }
     }
 }
